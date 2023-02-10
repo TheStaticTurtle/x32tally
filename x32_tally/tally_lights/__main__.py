@@ -40,7 +40,7 @@ client.on_message = on_message
 
 while True:
     for ch, input_channel in config.input_channels.items():
-        if "set_tally" not in input_channel or ch != 1:
+        if "set_tally" not in input_channel:
             continue
 
         color = [0, 0, 0]
