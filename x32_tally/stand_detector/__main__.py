@@ -5,7 +5,7 @@ import sys
 from .. import config
 import paho.mqtt.client as mqtt
 
-coloredlogs.install(stream=sys.stdout, level=logging.DEBUG)
+coloredlogs.install(stream=sys.stdout, level=config.log_levels["stand_detector"])
 
 client = mqtt.Client()
 client.enable_logger(logging.getLogger("MQTT"))
@@ -23,6 +23,5 @@ while True:
 
         if ch not in last_status or status[ch] != last_status[ch]:
             last_status[ch] = status[ch]
+            logging.info(f"Channel {ch} changed status to: {status[ch]}")
             client.publish(f"ONSTAND_DETECTION/ch/{ch:02d}/is_on_stand", last_status[ch], retain=True)
-
-    time.sleep(0.1)

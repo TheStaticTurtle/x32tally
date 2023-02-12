@@ -2,12 +2,13 @@ import json
 import logging
 import time
 
-import coloredlogs
-import sys
-coloredlogs.install(stream=sys.stdout, level=logging.DEBUG)
-
 import paho.mqtt.client as mqtt
 from .. import config
+
+import coloredlogs
+import sys
+
+coloredlogs.install(stream=sys.stdout, level=config.log_levels["tally_lights"])
 
 client = mqtt.Client()
 client.enable_logger(logging.getLogger("MQTT"))

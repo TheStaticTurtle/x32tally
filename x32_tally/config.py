@@ -1,3 +1,5 @@
+import logging
+
 import board
 import neopixel
 import digitalio
@@ -25,11 +27,18 @@ def gpio_read_fn(pin):
         return getattr(button, "value")
     return read
 
-x32_address = "192.168.150.196"
+
+x32_address = "192.168.150.189"
 
 mqtt = {
     "host": "127.0.0.1",
     "port": 1883
+}
+
+log_levels = {
+    "stand_detector": logging.INFO,
+    "osc": logging.INFO,
+    "tally_lights": logging.INFO,
 }
 
 input_channels = {
