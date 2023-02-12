@@ -44,18 +44,26 @@ class X32(threading.Thread):
         for handler in self.handlers:
             handler(message)
 
+    def _send(self, data: bytes):
+        try:
+            self._socket.sendto(data, self._address)
+        except OSError as e:
+            self._log.warning(f"Tried to send data but got: {e}")
+        except Exception as e:
+            self._log.error(f"Tried to send data but got: {e}")
+
     def _re_sync(self):
-        self._socket.sendto(OscMessageBuilder("/info").build().dgram, self._address)
+        self._send(OscMessageBuilder("/info").build().dgram)
         for i in range(1, 33):
-            self._socket.sendto(OscMessageBuilder(f"/ch/{i:02}/mix/on").build().dgram, self._address)
-            self._socket.sendto(OscMessageBuilder(f"/ch/{i:02}/mix/fader").build().dgram, self._address)
-            self._socket.sendto(OscMessageBuilder(f"/ch/{i:02}/config/icon").build().dgram, self._address)
-            self._socket.sendto(OscMessageBuilder(f"/ch/{i:02}/config/name").build().dgram, self._address)
-            self._socket.sendto(OscMessageBuilder(f"/ch/{i:02}/config/color").build().dgram, self._address)
+            self._send(OscMessageBuilder(f"/ch/{i:02}/mix/on").build().dgram)
+            self._send(OscMessageBuilder(f"/ch/{i:02}/mix/fader").build().dgram)
+            self._send(OscMessageBuilder(f"/ch/{i:02}/config/icon").build().dgram)
+            self._send(OscMessageBuilder(f"/ch/{i:02}/config/name").build().dgram)
+            self._send(OscMessageBuilder(f"/ch/{i:02}/config/color").build().dgram)
 
     def _re_subscribe(self):
         self._log.info("[TX] Resubscribed")
-        self._socket.sendto(OscMessageBuilder("/xremote").build().dgram, self._address)
+        self._send(OscMessageBuilder("/xremote").build().dgram)
 
 
     def run(self) -> None:
