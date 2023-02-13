@@ -5,27 +5,27 @@ import neopixel
 import digitalio
 
 
-pixels = neopixel.NeoPixel(board.D18, 6 * 16, auto_write=False)
+class LedController:
+    def __init__(self):
+        self.pixels = neopixel.NeoPixel(board.D18, 6 * 16, auto_write=False)
 
-def update_leds():
-    pixels.show()
+    def update(self):
+        self.pixels.show()
 
-def ws1812b_set_fn(start_i, count):
-    leds = list(range(start_i * count, (start_i+1) * count))
-
-    def write(r, g, b):
+    def set(self, leds, r, g, b):
         for led in leds:
-            pixels[led] = (r, g, b)
-    return write
+            self.pixels[led] = (r, g, b)
 
 
-def gpio_read_fn(pin):
-    button = digitalio.DigitalInOut(pin)
-    button.direction = digitalio.Direction.INPUT
+class InputController:
+    def __init__(self):
+        self.buttons = {}
 
-    def read():
-        return getattr(button, "value")
-    return read
+    def get(self, pin):
+        if pin.id not in self.buttons:
+            self.buttons[pin.id] = digitalio.DigitalInOut(pin)
+            self.buttons[pin.id].direction = digitalio.Direction.INPUT
+        return self.buttons[pin.id].value
 
 
 x32_address = "192.168.150.189"
@@ -42,22 +42,22 @@ log_levels = {
 }
 
 input_channels = {
-    1: {"set_tally": ws1812b_set_fn(0, 6), "is_on_stand": gpio_read_fn(board.D23)},
-    2: {"set_tally": ws1812b_set_fn(1, 6), "is_on_stand": gpio_read_fn(board.D24)},
-    3: {"set_tally": ws1812b_set_fn(2, 6), "is_on_stand": gpio_read_fn(board.D25)},
-    4: {"set_tally": ws1812b_set_fn(3, 6), "is_on_stand": gpio_read_fn(board.D8)},
-    5: {"set_tally": ws1812b_set_fn(4, 6), "is_on_stand": gpio_read_fn(board.D7)},
-    6: {"set_tally": ws1812b_set_fn(5, 6), "is_on_stand": gpio_read_fn(board.D1)},
-    7: {"set_tally": ws1812b_set_fn(6, 6), "is_on_stand": gpio_read_fn(board.D12)},
-    8: {"set_tally": ws1812b_set_fn(7, 6), "is_on_stand": gpio_read_fn(board.D16)},
-    9: {"set_tally": ws1812b_set_fn(8, 6), "is_on_stand": gpio_read_fn(board.D20)},
-    10: {"set_tally": ws1812b_set_fn(9, 6), "is_on_stand": gpio_read_fn(board.D21)},
-    11: {"set_tally": ws1812b_set_fn(10, 6), "is_on_stand": gpio_read_fn(board.D26)},
-    12: {"set_tally": ws1812b_set_fn(11, 6), "is_on_stand": gpio_read_fn(board.D19)},
-    13: {"set_tally": ws1812b_set_fn(12, 6), "is_on_stand": gpio_read_fn(board.D13)},
-    14: {"set_tally": ws1812b_set_fn(13, 6), "is_on_stand": gpio_read_fn(board.D6)},
-    15: {"set_tally": ws1812b_set_fn(14, 6), "is_on_stand": gpio_read_fn(board.D5)},
-    16: {"set_tally": ws1812b_set_fn(15, 6), "is_on_stand": gpio_read_fn(board.D0)},
+    1:  {"set_tally": [0, 1, 2, 3, 4, 5],       "is_on_stand": board.D23},
+    2:  {"set_tally": [6, 7, 8, 9, 10, 11],     "is_on_stand": board.D24},
+    3:  {"set_tally": [12, 13, 14, 15, 16, 17], "is_on_stand": board.D25},
+    4:  {"set_tally": [18, 19, 20, 21, 22, 23], "is_on_stand": board.D8},
+    5:  {"set_tally": [24, 25, 26, 27, 28, 29], "is_on_stand": board.D7},
+    6:  {"set_tally": [30, 31, 32, 33, 34, 35], "is_on_stand": board.D1},
+    7:  {"set_tally": [36, 37, 38, 39, 40, 41], "is_on_stand": board.D12},
+    8:  {"set_tally": [42, 43, 44, 45, 46, 47], "is_on_stand": board.D16},
+    9:  {"set_tally": [48, 49, 50, 51, 52, 53], "is_on_stand": board.D20},
+    10: {"set_tally": [54, 55, 56, 57, 58, 59], "is_on_stand": board.D21},
+    11: {"set_tally": [60, 61, 62, 63, 64, 65], "is_on_stand": board.D26},
+    12: {"set_tally": [66, 67, 68, 69, 70, 71], "is_on_stand": board.D19},
+    13: {"set_tally": [72, 73, 74, 75, 76, 77], "is_on_stand": board.D13},
+    14: {"set_tally": [78, 79, 80, 81, 82, 83], "is_on_stand": board.D6},
+    15: {"set_tally": [84, 85, 86, 87, 88, 89], "is_on_stand": board.D5},
+    16: {"set_tally": [90, 91, 92, 93, 94, 95], "is_on_stand": board.D0},
     17: {},
     18: {},
     19: {},

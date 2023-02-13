@@ -24,20 +24,24 @@ for ch, input_channel in config.input_channels.items():
 message_history = {}
 
 
-def on_message(client, userdata, msg):
+def on_message(clt, userdata, msg):
     global message_history
     try:
         message_history[msg.topic] = json.loads(msg.payload)
-    except json.decoder.JSONDecodeError as e:
+    except json.decoder.JSONDecodeError:
         pass
+
 
 def try_get(obj, topic):
     if topic in obj:
         return obj[topic]
     return None
 
+
 client.on_message = on_message
 
+
+leds = config.LedController()
 
 while True:
     for ch, input_channel in config.input_channels.items():
@@ -58,9 +62,8 @@ while True:
                 if bool(is_on_stand) == is_active:
                     if int(time.time()*5) % 2 == 0:
                         color = [0, 75, 0] if is_active else [75, 0, 0]
+        leds.set(leds=input_channel["set_tally"], r=color[0], g=color[1], b=color[2])
 
-        input_channel["set_tally"](*color)
-    config.update_leds()
+    leds.update()
 
     time.sleep(0.05)
-

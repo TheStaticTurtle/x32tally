@@ -12,6 +12,8 @@ client.enable_logger(logging.getLogger("MQTT"))
 client.connect(config.mqtt["host"], config.mqtt["port"], 60)
 client.loop_start()
 
+inputs = config.InputController()
+
 status = {}
 last_status = {}
 while True:
@@ -19,7 +21,7 @@ while True:
         if "is_on_stand" not in input_channel:
             status[ch] = None
         else:
-            status[ch] = 1 if input_channel["is_on_stand"]() else 0
+            status[ch] = 1 if inputs.get(input_channel["is_on_stand"]) else 0
 
         if ch not in last_status or status[ch] != last_status[ch]:
             last_status[ch] = status[ch]
