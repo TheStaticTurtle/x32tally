@@ -30,6 +30,13 @@ class InputController:
 
 x32_address = "192.168.150.189"
 
+tally_colors = {
+    "muted": (25, 0, 0),
+    "muted_not_in_stand": (75, 0, 0),
+    "active": (0, 25, 0),
+    "active_in_stand": (75, 0),
+}
+
 mqtt = {
     "host": "127.0.0.1",
     "port": 1883

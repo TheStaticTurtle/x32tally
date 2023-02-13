@@ -56,12 +56,12 @@ while True:
         if on is not None and fader is not None:
             is_active = on[0] and fader[0] > 0.08
 
-            color = [0, 10, 0] if is_active else [10, 0, 0]
+            color = config.tally_colors["active"] if is_active else config.tally_colors["muted"]
 
             if is_on_stand is not None:
                 if bool(is_on_stand) == is_active:
                     if int(time.time()*5) % 2 == 0:
-                        color = [0, 75, 0] if is_active else [75, 0, 0]
+                        color = config.tally_colors["active_in_stand"] if is_active else config.tally_colors["muted_not_in_stand"]
         leds.set(leds=input_channel["set_tally"], r=color[0], g=color[1], b=color[2])
 
     leds.update()
