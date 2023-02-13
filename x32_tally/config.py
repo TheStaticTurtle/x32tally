@@ -34,7 +34,7 @@ tally_colors = {
     "muted": (25, 0, 0),
     "muted_not_in_stand": (75, 0, 0),
     "active": (0, 25, 0),
-    "active_in_stand": (75, 0),
+    "active_in_stand": (0, 255, 0),
 }
 
 mqtt = {
