@@ -24,21 +24,23 @@ def wheel(pos):
 
 
 if __name__ == "__main__":
+    leds = config.LedController()
+
     for ch, input_channel in config.input_channels.items():
         if "set_tally" in input_channel:
-            input_channel["set_tally"](0, 100, 255)
-            config.update_leds()
+            leds.set(leds=input_channel["set_tally"], r=0, g=100, b=250)
+            leds.update()
             time.sleep(0.01)
 
     for i in range(0, 4):
         color = (0, 100, 255) if i % 2 == 0 else (0, 0, 0)
         for ch, input_channel in config.input_channels.items():
             if "set_tally" in input_channel:
-                input_channel["set_tally"](*color)
-        config.update_leds()
+                leds.set(leds=input_channel["set_tally"], r=color[0], g=color[1], b=color[2])
+        leds.update()
         time.sleep(0.1)
 
-    for i in range(len(config.pixels)):
-        pixel_index = (i * 256 // len(config.pixels))
-        config.pixels[i] = wheel(pixel_index & 255)
-    config.pixels.show()
+    for i in range(len(leds.pixels)):
+        pixel_index = (i * 256 // len(leds.pixels))
+        leds.pixels[i] = wheel(pixel_index & 255)
+    leds.pixels.show()
