@@ -49,6 +49,8 @@ class X32(threading.Thread):
             self.x32_server_name = message.params[1]
             self.x32_console_model = message.params[2]
             self.x32_console_version = message.params[3]
+            for handler in self.connection_handlers:
+                handler(self.has_connection)
 
         for handler in self.handlers:
             handler(message)
@@ -88,12 +90,11 @@ class X32(threading.Thread):
             if self.last_resubscribe + 5 < time.time():
                 self._re_subscribe()
 
-            connection_status = self.has_connection
-            if last_connection_status != connection_status:
-                last_connection_status = connection_status
+            if last_connection_status != self.has_connection:
+                last_connection_status = self.has_connection
                 for handler in self.connection_handlers:
-                    handler(connection_status)
-                if connection_status:
+                    handler(self.has_connection)
+                if self.has_connection:
                     self._re_sync()
 
             try:

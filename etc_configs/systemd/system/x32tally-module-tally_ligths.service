@@ -1,0 +1,16 @@
+[Unit]
+Description=X32Tally Tally lights module
+After=syslog.target network.target mosquitto.service x32tally-module-stand_buttons.service x32tally-module-osc.service
+
+[Service]
+Type=simple
+
+User=root
+
+WorkingDirectory=/opt/x32_tally
+ExecStart=/usr/bin/python3 -m x32_tally.tally_lights
+
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

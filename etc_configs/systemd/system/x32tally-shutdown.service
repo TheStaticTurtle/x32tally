@@ -7,7 +7,7 @@ Before=shutdown.target
 Type=oneshot
 User=root
 WorkingDirectory=/opt/x32_tally
-ExecStart=python -m x32_tally.scripts.shutdown
+ExecStart=/usr/bin/python3 -m x32_tally.scripts.shutdown
 TimeoutStartSec=0
 
 [Install]
