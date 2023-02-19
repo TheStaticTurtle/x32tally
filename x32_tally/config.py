@@ -28,7 +28,7 @@ class InputController:
         return self.buttons[pin.id].value
 
 
-x32_address = "192.168.150.189"
+x32_address = "192.168.150.100"
 
 tally_colors = {
     "muted": (25, 0, 0),

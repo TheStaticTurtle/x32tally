@@ -21,8 +21,13 @@ def forward_to_mqtt(message: OscMessage):
     client.publish(f"X32{message.address}", json.dumps(message.params), retain=True)
 
 
+def publish_connection_status(is_connected):
+    client.publish(f"X32_STATUS/connected", json.dumps({"status": is_connected}), retain=True)
+
+
 x32 = X32(config.x32_address)
 x32.handlers.append(forward_to_mqtt)
+x32.connection_handlers.append(publish_connection_status)
 x32.start()
 
 

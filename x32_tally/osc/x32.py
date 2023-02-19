@@ -24,15 +24,24 @@ class X32(threading.Thread):
         self.last_resubscribe = 0
         self.last_resync = 0
 
+        self.last_incoming = 0
+
         self.context = {}
 
         self.handlers = []
+        self.connection_handlers = []
 
     def __repr__(self):
         return f"<X32 server_version=\"{self.x32_server_version}\" server_name=\"{self.x32_server_name}\" console_model=\"{self.x32_console_model}\" console_version=\"{self.x32_console_version}\">"
 
+    @property
+    def has_connection(self):
+        return (time.time() - 30) < self.last_incoming
+
     def handle_message(self, message):
         self._log.debug(f"[RX] {message.address} {message.params}")
+
+        self.last_incoming = time.time()
 
         self.context[message.address] = message
         if message.address == "/info":
@@ -53,7 +62,7 @@ class X32(threading.Thread):
             self._log.error(f"Tried to send data but got: {e}")
 
     def _re_sync(self):
-        self._send(OscMessageBuilder("/info").build().dgram)
+        self.last_resync = time.time()
         for i in range(1, 33):
             self._send(OscMessageBuilder(f"/ch/{i:02}/mix/on").build().dgram)
             self._send(OscMessageBuilder(f"/ch/{i:02}/mix/fader").build().dgram)
@@ -62,19 +71,30 @@ class X32(threading.Thread):
             self._send(OscMessageBuilder(f"/ch/{i:02}/config/color").build().dgram)
 
     def _re_subscribe(self):
+        self.last_resubscribe = time.time()
         self._log.info("[TX] Resubscribed")
         self._send(OscMessageBuilder("/xremote").build().dgram)
+        self._send(OscMessageBuilder("/info").build().dgram)
 
 
     def run(self) -> None:
+        last_connection_status = None
         while True:
+            time.sleep(0.001)
+
             if self.last_resync + 60 < time.time():
-                self.last_resync = time.time()
                 self._re_sync()
 
             if self.last_resubscribe + 5 < time.time():
-                self.last_resubscribe = time.time()
                 self._re_subscribe()
+
+            connection_status = self.has_connection
+            if last_connection_status != connection_status:
+                last_connection_status = connection_status
+                for handler in self.connection_handlers:
+                    handler(connection_status)
+                if connection_status:
+                    self._re_sync()
 
             try:
                 data, peer = self._socket.recvfrom(1024)
