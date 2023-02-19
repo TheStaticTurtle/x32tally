@@ -20,10 +20,10 @@ last_status = {}
 while True:
     time.sleep(0.05)
     for ch, input_channel in config.input_channels.items():
-        if "is_on_stand" not in input_channel:
+        if "on_stand_button" not in input_channel:
             status[ch] = None
         else:
-            status[ch] = 1 if inputs.get(input_channel["is_on_stand"]) else 0
+            status[ch] = 1 if inputs.get(input_channel["on_stand_button"]) else 0
 
         if ch not in last_status or status[ch] != last_status[ch]:
             last_status[ch] = status[ch]

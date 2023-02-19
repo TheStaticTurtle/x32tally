@@ -52,7 +52,7 @@ animation_speed = 1
 input_channels = {
     ch: input_channel
     for ch, input_channel in config.input_channels.items()
-    if "set_tally" in input_channel
+    if "tally_leds" in input_channel
 }
 
 while True:
@@ -73,20 +73,20 @@ while True:
                     if bool(is_on_stand) == is_active:
                         if int(time.time()*5) % 2 == 0:
                             color = config.tally_colors["active_in_stand"] if is_active else config.tally_colors["muted_not_in_stand"]
-            leds.set(leds=input_channel["set_tally"], r=color[0], g=color[1], b=color[2])
+            leds.set(leds=input_channel["tally_leds"], r=color[0], g=color[1], b=color[2])
     else:
         animation_counter += animation_speed
         if animation_counter == len(input_channels) - 1 or animation_counter == 0:
             animation_speed *= -1
 
         for ch, input_channel in input_channels.items():
-            leds.set(leds=input_channel["set_tally"], r=0, g=20, b=40)
+            leds.set(leds=input_channel["tally_leds"], r=0, g=20, b=40)
 
-        leds.set(leds=list(input_channels.values())[animation_counter]["set_tally"], r=0, g=75, b=200)
+        leds.set(leds=list(input_channels.values())[animation_counter]["tally_leds"], r=0, g=75, b=200)
         if animation_counter > 0:
-            leds.set(leds=list(input_channels.values())[animation_counter-1]["set_tally"], r=0, g=50, b=150)
+            leds.set(leds=list(input_channels.values())[animation_counter-1]["tally_leds"], r=0, g=50, b=150)
         if animation_counter < len(input_channels) - 2:
-            leds.set(leds=list(input_channels.values())[animation_counter+1]["set_tally"], r=0, g=50, b=150)
+            leds.set(leds=list(input_channels.values())[animation_counter+1]["tally_leds"], r=0, g=50, b=150)
 
 
     leds.update()

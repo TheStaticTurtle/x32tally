@@ -7,8 +7,8 @@ class LedController:
     def __init__(self):
         highest_pixel_id = 0
         for ch_n, ch in config.input_channels.items():
-            if "set_tally" in ch:
-                highest_pixel_id = max(highest_pixel_id, *ch["set_tally"])
+            if "tally_leds" in ch:
+                highest_pixel_id = max(highest_pixel_id, *ch["tally_leds"])
         self.pixels = neopixel.NeoPixel(config.tally_neopixel_pin, highest_pixel_id + 1, auto_write=False)
 
     def update(self):
