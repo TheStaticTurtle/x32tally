@@ -15,9 +15,7 @@ coloredlogs.install(stream=sys.stdout, level=config.log_levels["stand_buttons"])
 
 
 # Get the MQTT client
-client = mqtt.Client()
-client.enable_logger(logging.getLogger("MQTT"))
-client.connect(config.mqtt["host"], config.mqtt["port"], 60)
+client = io.get_mqtt_client("module_stand_buttons")
 client.loop_start()
 
 # Instantiate the input controller

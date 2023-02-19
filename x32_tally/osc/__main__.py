@@ -7,6 +7,7 @@ from pythonosc.osc_message import OscMessage
 import paho.mqtt.client as mqtt
 from x32_tally.osc.x32 import X32
 from .. import config
+from .. import io
 
 coloredlogs.install(stream=sys.stdout, level=config.log_levels["osc"])
 
@@ -15,9 +16,7 @@ coloredlogs.install(stream=sys.stdout, level=config.log_levels["osc"])
 # In addition it also sends ot the connection status that includes if the module is connected or not to the console and the console version/model
 
 # Get the MQTT client
-client = mqtt.Client()
-client.enable_logger(logging.getLogger("MQTT"))
-client.connect(config.mqtt["host"], config.mqtt["port"], 60)
+client = io.get_mqtt_client("module_osc")
 client.loop_start()
 
 # Get the X32 client

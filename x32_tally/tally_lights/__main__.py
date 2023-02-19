@@ -21,9 +21,7 @@ coloredlogs.install(stream=sys.stdout, level=config.log_levels["tally_lights"])
 #   If the channel is NOT active and in the stand → Flashing red LEDs
 
 # Get the MQTT client
-client = mqtt.Client()
-client.enable_logger(logging.getLogger("MQTT"))
-client.connect(config.mqtt["host"], config.mqtt["port"], 60)
+client = io.get_mqtt_client("module_tally_lights")
 client.loop_start()
 
 # Define a dict to store message history, this is necessary because OSC message from the console comes asynchronously, and they are need all at the time.
