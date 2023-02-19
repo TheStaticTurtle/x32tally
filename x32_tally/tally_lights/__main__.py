@@ -44,7 +44,7 @@ for ch, input_channel in config.input_channels.items():
         continue
     client.subscribe(f"modules/osc/ch/{ch:02d}/mix/on")
     client.subscribe(f"modules/osc/ch/{ch:02d}/mix/fader")
-    client.subscribe(f"modules/stand_buttons/{ch:02d}/is_on_stand")
+    client.subscribe(f"modules/stand_buttons/{ch:02d}/status")
 
 # Also subscribe the global OSC status (used to check if the OSC module is connected to the console)
 client.subscribe(f"modules/osc/status")
@@ -104,7 +104,7 @@ def do_tally_lights():
         # Get the mute, fader and is_on_stand values from the history
         x32_on = try_get(message_history, f"modules/osc/ch/{ch:02d}/mix/on")
         x32_fader = try_get(message_history, f"modules/osc/ch/{ch:02d}/mix/fader")
-        module_is_on_stand = try_get(message_history, f"modules/stand_buttons/{ch:02d}/is_on_stand")
+        module_is_on_stand = try_get(message_history, f"modules/stand_buttons/{ch:02d}/status")
 
         # If the channel is enabled
         if input_channel["enabled"]:
@@ -119,7 +119,7 @@ def do_tally_lights():
                 # if the value stored in the history for the is_on_stand is not None
                 if module_is_on_stand is not None:
                     # If the channel is active and in the stand or not active and not in the stand
-                    if bool(module_is_on_stand) == is_active:
+                    if module_is_on_stand["value"] == is_active:
                         # Math tricks to make it blink slower
                         if int(time.time() * 5) % 2 == 0:
                             # Set the bright color to the channel
