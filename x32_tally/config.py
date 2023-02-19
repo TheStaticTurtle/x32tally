@@ -1,19 +1,26 @@
 import logging
 import board
 
+# Main config file
+# this file is imported in every module
+
+# Address of the X32/M32 console
 x32_address = "192.168.150.201"
 
+# Address of the MQTT server. if mosquito is installed locally use 127.0.0.1:1883
 mqtt = {
     "host": "127.0.0.1",
     "port": 1883
 }
 
+# Log level used by each module
 log_levels = {
     "stand_buttons": logging.INFO,
     "osc": logging.INFO,
     "tally_lights": logging.INFO,
 }
 
+# Colors for the tally lights
 tally_colors = {
     "muted": (25, 0, 0),
     "muted_not_in_stand": (75, 0, 0),
@@ -21,8 +28,13 @@ tally_colors = {
     "active_in_stand": (0, 255, 0),
 }
 
+# Pin used for the neopixel output
 tally_neopixel_pin = board.D18
 
+# List of input channels from 1 to 32.
+#   enabled: Enabled or not the channel it will completely disable the channel
+#   tally_leds: List of the leds for this channel
+#   on_stand_button: Pin of the stand buttons
 input_channels = {
     1:  {"enabled": True, "tally_leds": [0,  1,   2,  3,  4,  5], "on_stand_button": board.D23},
     2:  {"enabled": True, "tally_leds": [6,  7,   8,  9, 10, 11], "on_stand_button": board.D24},

@@ -2,6 +2,10 @@ import neopixel
 import digitalio
 from . import config
 
+# IO Wrappers
+# This file contains wrappers for input and outputs.
+# This allows you to easily customize input and output methods
+
 
 class LedController:
     def __init__(self):

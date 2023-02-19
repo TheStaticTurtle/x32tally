@@ -2,7 +2,6 @@ from .. import config
 from .. import io
 import time
 
-
 def wheel(pos):
     if pos < 0 or pos > 255:
         r = g = b = 0
@@ -22,6 +21,8 @@ def wheel(pos):
         b = int(255 - pos * 3)
     return r, g, b
 
+
+# Startup script this script creates a LED controller and does some blinkie lights animations
 
 if __name__ == "__main__":
     leds = io.LedController()
