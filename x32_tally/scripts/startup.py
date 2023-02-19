@@ -1,5 +1,5 @@
 from .. import config
-import neopixel
+from .. import io
 import time
 
 
@@ -24,7 +24,7 @@ def wheel(pos):
 
 
 if __name__ == "__main__":
-    leds = config.LedController()
+    leds = io.LedController()
 
     for ch, input_channel in config.input_channels.items():
         if "set_tally" in input_channel:

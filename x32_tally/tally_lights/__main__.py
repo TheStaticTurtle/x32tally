@@ -4,6 +4,7 @@ import time
 
 import paho.mqtt.client as mqtt
 from .. import config
+from .. import io
 
 import coloredlogs
 import sys
@@ -43,7 +44,7 @@ def try_get(obj, topic):
 client.on_message = on_message
 
 
-leds = config.LedController()
+leds = io.LedController()
 
 animation_counter = 0
 animation_speed = 1

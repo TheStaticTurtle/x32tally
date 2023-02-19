@@ -3,6 +3,7 @@ import time
 import coloredlogs
 import sys
 from .. import config
+from .. import io
 import paho.mqtt.client as mqtt
 
 coloredlogs.install(stream=sys.stdout, level=config.log_levels["stand_detector"])
@@ -12,11 +13,12 @@ client.enable_logger(logging.getLogger("MQTT"))
 client.connect(config.mqtt["host"], config.mqtt["port"], 60)
 client.loop_start()
 
-inputs = config.InputController()
+inputs = io.InputController()
 
 status = {}
 last_status = {}
 while True:
+    time.sleep(0.05)
     for ch, input_channel in config.input_channels.items():
         if "is_on_stand" not in input_channel:
             status[ch] = None

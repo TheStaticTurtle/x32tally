@@ -1,41 +1,8 @@
 import logging
-
 import board
-import neopixel
-import digitalio
-
-
-class LedController:
-    def __init__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, 6 * 16, auto_write=False)
-
-    def update(self):
-        self.pixels.show()
-
-    def set(self, leds, r, g, b):
-        for led in leds:
-            self.pixels[led] = (r, g, b)
-
-
-class InputController:
-    def __init__(self):
-        self.buttons = {}
-
-    def get(self, pin):
-        if pin.id not in self.buttons:
-            self.buttons[pin.id] = digitalio.DigitalInOut(pin)
-            self.buttons[pin.id].direction = digitalio.Direction.INPUT
-        return self.buttons[pin.id].value
 
 
 x32_address = "192.168.150.100"
-
-tally_colors = {
-    "muted": (25, 0, 0),
-    "muted_not_in_stand": (75, 0, 0),
-    "active": (0, 25, 0),
-    "active_in_stand": (0, 255, 0),
-}
 
 mqtt = {
     "host": "127.0.0.1",
@@ -47,6 +14,15 @@ log_levels = {
     "osc": logging.INFO,
     "tally_lights": logging.INFO,
 }
+
+tally_colors = {
+    "muted": (25, 0, 0),
+    "muted_not_in_stand": (75, 0, 0),
+    "active": (0, 25, 0),
+    "active_in_stand": (0, 255, 0),
+}
+
+tally_neopixel_pin = board.D18
 
 input_channels = {
     1:  {"set_tally": [0, 1, 2, 3, 4, 5],       "is_on_stand": board.D23},
