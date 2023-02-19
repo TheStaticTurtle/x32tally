@@ -1,5 +1,5 @@
 :80 {
-        root * /opt/x32_tally/x32_tally/spa_webui/dist/
+        root * /opt/x32_tally/x32_tally/webui/dist/
 
         reverse_proxy /mqtt 127.0.0.1:8080
 }
