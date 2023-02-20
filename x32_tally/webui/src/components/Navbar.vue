@@ -11,7 +11,7 @@
     <span class="text-center console-infos" :class="{'blinking': !osc_status.connected}">
       {{ osc_status.x32_server_name }} ({{ osc_status.x32_server_version }})<br>
       {{ osc_status.x32_console_model }} ({{ osc_status.x32_console_version }})<br>
-      <template v-if="refresh">Last message: {{ osc_last_message_rel }}sec</template>
+      <template v-if="refresh">Last message: {{ osc_last_message_rel }}sec ago</template>
     </span>
     <v-spacer></v-spacer>
 
@@ -39,7 +39,7 @@ export default {
       refresh: true,
       update_interval: null,
 
-      osc_last_message: 0,
+      osc_last_message: Date.now()/1000,
       osc_last_message_rel: 0,
       osc_status: {
         connected: true,
@@ -53,6 +53,9 @@ export default {
   methods: {
     update() {
       this.osc_last_message_rel = (Date.now() / 1000 - this.osc_last_message).toFixed(2)
+      if(this.osc_last_message_rel > 10) {
+        this.osc_status.connected = false
+      }
     },
     onMessage(data) {
       const topic = data.topic
