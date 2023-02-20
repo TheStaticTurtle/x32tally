@@ -1,33 +1,36 @@
 <template>
 
   <v-app theme="dark">
-    <v-app-bar>
-      <v-app-bar-title>X32Tally</v-app-bar-title>
-      <v-spacer></v-spacer>
-
-    </v-app-bar>
-
+    <Navbar></Navbar>
     <v-main>
       <router-view></router-view>
     </v-main>
+    <v-footer class="footer">
+      <a href="https://github.com/TheStaticTurtle/x32tally">X32Tally</a>&nbsp;&nbsp;-&nbsp;&nbsp;© 2023 TheStaticTurtle&nbsp;&nbsp;-&nbsp;&nbsp;Licensed under&nbsp;<a href="https://github.com/TheStaticTurtle/x32tally/blob/master/LICENSE.md">GPLv3.0</a>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
 import * as mqtt from 'mqtt/dist/mqtt.min';
 import EventBus from "@/eventBus"
+import Navbar from "@/components/Navbar.vue";
 
 export default {
   name: "App",
+  components: {Navbar},
   mounted() {
-    let client = mqtt.connect(`ws://${document.location.host}/mqtt`) // create a client
+    let client = mqtt.connect(`ws://${document.location.host}/mqtt`, {
+      clientId: "x32tally_web" + Math.random().toString(16).substr(2, 8)
+    })
+
     client.on('error', function (err) {
-      console.log(err)
+      console.error(err)
       client.end()
     })
 
     client.on('connect', function () {
-      console.log('Client connected')
+      console.info('Client connected')
       client.subscribe('#', { qos: 0 })
     })
 
@@ -39,12 +42,15 @@ export default {
     })
 
     client.on('close', function () {
-      console.log('Disconnected')
+      console.warn('Disconnected')
     })
   }
 }
 </script>
 
 <style scoped>
-
+.footer {
+  max-height: 16px !important;
+  font-size: 0.70rem;
+}
 </style>

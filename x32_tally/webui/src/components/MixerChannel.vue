@@ -1,14 +1,16 @@
 <template>
-  <div class="mixer-channel" :class="{'channel-blink': blinking}">
-    <div class="channel-name" :style="headerColor" :class="{'channel-blink': blinking}">
-      {{ short_name }}
-      <div :class="headerIcon" alt=""/>
+  <div class="mixer-channel" :style="channelColorStyle">
+    <div class="channel-header" :style="headerColorStyle">
+      <span class="channel-name">
+        <fit-text>{{ name }}</fit-text>
+      </span>
+      <div class="header-icon" :class="headerIcon"/>
     </div>
     <div class="channel-infos">
       <fader :value="fader"></fader>
     </div>
     <v-spacer></v-spacer>
-    <led :enabled="!muted" >
+    <led :enabled="!muted" color-on="gray">
       <v-icon v-if="muted" icon="mdi-microphone-off"></v-icon>
       <v-icon v-else icon="mdi-microphone"></v-icon>
     </led>
@@ -25,11 +27,12 @@ import Led from "@/components/Led.vue";
 import Fader from "@/components/Fader.vue";
 
 import "../assets/x32icons.css"
+import FitText from "@/components/FitText.vue";
 
 
 export default {
   name: "MixerChannel",
-  components: {Fader, Led},
+  components: {FitText, Fader, Led},
   props: {
     name: {
       type: String,
@@ -60,16 +63,22 @@ export default {
   },
 
   computed: {
-    short_name() {
-      const len = 6;
-      return this.name.length > len ? this.name.slice(0, len) + "…" : this.name;
+    active() {
+      return !this.muted && this.fader > 0.08
     },
 
-    blinking() {
-      return (this.muted !== this.onStand) && this.onStand !== null
+    has_problem() {
+      return (this.active === this.onStand) && this.onStand !== null
     },
 
-    headerColor() {
+    headerColorStyle() {
+      if(this.has_problem) {
+        return {
+          "background-color": "#ffff00",
+          "border-color": "#ffff00",
+          "color": "#050504",
+        }
+      }
       if(this.color === 0) return {"border-color": "gray"}
       if(this.color === 1) return {"border-color": "orangered"}
       if(this.color === 2) return {"border-color": "lawngreen"}
@@ -89,6 +98,14 @@ export default {
     },
     headerIcon() {
       return "x32icon-"+this.icon
+    },
+    channelColorStyle() {
+      if(this.has_problem) {
+        return {
+          "border-color": "#ffff00",
+        }
+      }
+      return {}
     }
   }
 }
@@ -98,31 +115,39 @@ export default {
   .mixer-channel {
     display: flex;
     height: 300px;
-    width: 80px;
+    width: 75px;
     border: 3px solid gray;
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
     padding: 4px;
-    margin: 4px;
+    margin: 6px;
   }
-  .mixer-channel > .channel-name {
+  .mixer-channel > .channel-header {
     display: flex;
     border: 3px solid gray;
-    width: 80px;
-    padding: 8px 8px 4px;
-    margin-top: -8px;
+    width: calc(100% + 14px);
+    padding: 4px 8px 4px;
+    margin-top: -7px;
     border-radius: 8px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  .mixer-channel > .channel-name > div {
+  .mixer-channel > .channel-header > div {
     height: 48px;
     width: 48px;
     background-size: cover;
-    border: 1px solid gray;
     border-radius: 8px;
+    border: 2px solid gray;
+    background-color: rgb(var(--v-theme-background))
+  }
+  .mixer-channel > .channel-header > .channel-name {
+    height: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .mixer-channel > .channel-infos {
     width: 100%;
@@ -130,21 +155,6 @@ export default {
     padding: 6px 0;
     display: flex;
     flex-direction: row;
-  }
-
-  .channel-blink {
-    animation: channel-blink-animation 0.50s steps(1, start) infinite;
-    -webkit-animation: channel-blink-animation .50s steps(1, start) infinite;
-  }
-  @keyframes channel-blink-animation {
-    50% {
-      border: 3px yellow dashed;
-    }
-  }
-  @-webkit-keyframes channel-blink-animation {
-    50% {
-      border: 3px yellow dashed;
-    }
   }
 
 </style>

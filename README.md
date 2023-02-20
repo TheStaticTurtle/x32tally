@@ -9,7 +9,7 @@ The system is composed of multiple submodules that communicate via MQTT:
 ![Working diagram](res/diagram.drawio.png)
 
 ### OSC Module
-The ocs module connects to the M32 and request some informations:
+The ocs module connects to the M32 and request some information:
  - Every 5 seconds:
    - Sends `/xremote` command to subscribe to inputs
  - Every 60sec
@@ -25,11 +25,11 @@ See these links for more ducomuentation on the X32 OSC protocol:
   - https://sites.google.com/site/patrickmaillot/x32#h.p_rE4IH0Luimc0
   - https://drive.google.com/file/d/1Snbwx3m6us6L1qeP1_pD6s8hbJpIpD0a/view
 
-### On stand detection module
+### Stand buttons module
 
 The on stand detection module reads GPIOs every few milliseconds to determine if a microphone is stored on the shelf and not on the hand of the performer
 
-The module send message the MQTT server with the topic `ONSTAND_DETECTION/ch/XX/is_on_stand` with the value `1` if the microphone is stored `0` otherwise
+The module send message the MQTT server with the topic `modules/stand_buttons/XX/status` with a JSON encoded value for if the microphone is stored on the stand or not
 
 ### Tally light modules
 

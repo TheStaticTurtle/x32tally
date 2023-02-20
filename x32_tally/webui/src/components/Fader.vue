@@ -18,7 +18,7 @@ export default {
   computed: {
     top_style() {
       return {
-        "top": this.value * 100 + "%"
+        "top": (1 - this.value) * 100 + "%"
       }
     }
   }
