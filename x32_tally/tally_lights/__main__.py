@@ -123,7 +123,10 @@ def do_tally_lights():
                         # Math tricks to make it blink slower
                         if int(time.time() * 5) % 2 == 0:
                             # Set the bright color to the channel
-                            color = config.tally_colors["active_in_stand"] if is_active else config.tally_colors["muted_not_in_stand"]
+                            color = config.tally_colors["active_in_stand_on"] if is_active else config.tally_colors["muted_not_in_stand_on"]
+                        else:
+                            color = config.tally_colors["active_in_stand_off"] if is_active else config.tally_colors["muted_not_in_stand_off"]
+
         # Set the leds
         leds.set(leds=input_channel["tally_leds"], r=color[0], g=color[1], b=color[2])
 
