@@ -67,15 +67,26 @@ export default {
       return !this.muted && this.fader > 0.08
     },
 
-    has_problem() {
-      return (this.active === this.onStand) && this.onStand !== null
+    active_on_stand() {
+      return this.active && this.onStand
+    },
+
+    muted_in_hand() {
+      return !this.active && !this.onStand
     },
 
     headerColorStyle() {
-      if(this.has_problem) {
+      if(this.active_on_stand) {
         return {
           "background-color": "#ffff00",
           "border-color": "#ffff00",
+          "color": "#050504",
+        }
+      }
+      if(this.muted_in_hand) {
+        return {
+          "background-color": "#00D0FFFF",
+          "border-color": "#00D0FFFF",
           "color": "#050504",
         }
       }
@@ -100,9 +111,14 @@ export default {
       return "x32icon-"+this.icon
     },
     channelColorStyle() {
-      if(this.has_problem) {
+      if(this.active_on_stand) {
         return {
           "border-color": "#ffff00",
+        }
+      }
+      if(this.muted_in_hand) {
+        return {
+          "border-color": "#00D0FFFF",
         }
       }
       return {}

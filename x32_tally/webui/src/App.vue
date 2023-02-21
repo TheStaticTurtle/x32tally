@@ -5,7 +5,8 @@
     <v-main>
       <router-view></router-view>
     </v-main>
-    <v-footer class="footer">
+    <CueDrawer style="margin-bottom: 16px"></CueDrawer>
+    <v-footer class="footer" app>
       <a href="https://github.com/TheStaticTurtle/x32tally">X32Tally</a>&nbsp;&nbsp;-&nbsp;&nbsp;© 2023 TheStaticTurtle&nbsp;&nbsp;-&nbsp;&nbsp;Licensed under&nbsp;<a href="https://github.com/TheStaticTurtle/x32tally/blob/master/LICENSE.md">GPLv3.0</a>
     </v-footer>
   </v-app>
@@ -15,10 +16,11 @@
 import * as mqtt from 'mqtt/dist/mqtt.min';
 import EventBus from "@/eventBus"
 import Navbar from "@/components/Navbar.vue";
+import CueDrawer from "@/components/CueDrawer.vue";
 
 export default {
   name: "App",
-  components: {Navbar},
+  components: {CueDrawer, Navbar},
   mounted() {
     let client = mqtt.connect(`ws://${document.location.host}/mqtt`, {
       clientId: "x32tally_web" + Math.random().toString(16).substr(2, 8)
